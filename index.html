@@ -11,23 +11,59 @@
 <!-- partial:index.partial.html -->
 <div id="world" />
 <div id="gameoverInstructions">
-  Oyun bitti
-</div>
-  <div id="keyLevel">
-  Amazon PRIME (10$): CTF22
-</div>
+  Game Over
   
+  <div id="winnerlap">
+    <p style="font-size:15px;">Tebrikler, Kodu kazandín.</p>
+    <p id="textToCopy" style="font-size:15px;color:black;padding:5px;" >PROMO2024DS</p>
+  <button onclick="copyText()" style="background-color: white; color: purple; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer; margin-left: 10px;">Copy📋</button>
+  <button id="playButton" onclick="resetGame()" >New Play</button>
+  </div>
+  
+  <div id="nowinnerlap">
+    <p id="textToCopy" style="font-size:15px;padding:5px;">Anahtar kazanamadin</p>
+ 
+  <button id="playButton" onclick="resetGame()" >Try Again</button>
+  </div>
+  
+</div>
+ 
+  
+  
+  
+    
 <div id="dist">
     <div class="label">Point</div>
     <div id="distValue">000</div>
 </div>
+  
+  <div id="keydist">
+    <div class="keylabel">Key</div>
+    <div id="keyValue">0</div>
+</div>
+  
+  
+  
+    
+
 
 <div id="instructions">Click to jump<span class="lightInstructions"></span></div>
 
 
 <div id="credits">
-  <p><a>Amazon PRIME Gift</a> | <a>TY Corp</a></p>
-</div>
+  <p><a href="https://google.com/" target="blank">Official Page</a> | <a href="https://www.tayfungezer.com" target="blank">TY Corp</a></p>
+
+
+<script>
+function copyText() {
+  var copyText = document.getElementById("textToCopy").textContent;
+  navigator.clipboard.writeText(copyText).then(function() {
+    alert("Yazı kopyalandı: " + copyText);
+  }, function(err) {
+    console.error("Yazı kopyalama başarısız oldu: ", err);
+  });
+}
+</script>
 <!-- partial -->
   <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r80/three.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js'></script>
