@@ -7,24 +7,41 @@
   overflow: hidden;
 }
 
+#playButton {
+  background-color: orange; /* Arka plan rengi turuncu */
+  color: white; /* Yazı rengi beyaz */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px; /* Köşe yuvarlama */
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase; /* Yazı büyük harf */
+}
 #gameoverInstructions {
   position: absolute;
   font-family: "Voltaire", sans-serif;
   font-weight: bold;
   text-transform: uppercase;
-  font-size: 120px;
+  font-size: 25px;
   text-align: center;
   color: #ffc5a2;
+  padding: 2px;
+  background-color: white; /* Arka plan rengi beyaz */
+  border-radius: 15px; /* Border radius */
+  
   opacity: 0;
   left: 50%;
   top: 50%;
-  width: 100%;
-  transform: translate(-50%, -100%);
+  width: 80%; /* Genişliği tüm ekranı kaplamasın */
+  
+  transform: translate(-50%, -50%);
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
   transition: all 500ms ease-in-out;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Gölge ekleyerek kutuyu belirginleştirir */
 }
 
 #gameoverInstructions.show {
@@ -56,8 +73,35 @@
 #keyLevel.show {
   opacity: 1;
   transform: translate(-50%, -50%);
+  
+}
+
+#keyLevels {
+  position: absolute;
+  font-family: "Voltaire", sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 50px;
+  text-align: center;
+  color: #ffc5a2;
+  opacity: 0;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  transform: translate(-50%, -100%);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   transition: all 500ms ease-in-out;
 }
+
+#keyLevels.show {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  transition: all 500ms ease-in-out;
+}
+
 
 #dist {
   position: absolute;
@@ -82,6 +126,37 @@
 }
 
 #distValue {
+  position: relative;
+  text-transform: uppercase;
+  color: #dc5f45;
+  font-size: 40px;
+  font-family: "Voltaire";
+  text-align: center;
+}
+
+#keydist {
+  position: absolute;
+  left: 10%;
+  top: 50px;
+  transform: translate(-50%, 0%);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.keylabel {
+  position: relative;
+  font-family: "Voltaire", sans-serif;
+  text-transform: uppercase;
+  color: #ffa873;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+#keyValue {
   position: relative;
   text-transform: uppercase;
   color: #dc5f45;
@@ -137,3 +212,42 @@
 .lightInstructions {
   color: #5f9042;
 }
+
+     .copy-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .copy-container .tooltip {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Tooltip'in konumu */
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .copy-container .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+
+        .copy-container:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
