@@ -12,6 +12,7 @@ var floorRadius = 200;
 var speed = 6;
 var distance =0;
 var level = 1;
+var keyrev=0;
 var levelInterval;
 var levelUpdateFreq = 3000;
 var initSpeed = 5;
@@ -29,7 +30,8 @@ var malusClearColor = 0xb44b39;
 var malusClearAlpha = 0;
 var audio = new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/264161/Antonio-Vivaldi-Summer_01.mp3');
 
-var fieldGameOver, fieldDistance, fieldkeyLevel;
+var fieldGameOver, fieldDistance;
+let fieldKeyrev;
 
 //SCREEN & MOUSE VARIABLES
 
@@ -401,6 +403,13 @@ BonusParticles.prototype.explose = function(){
 function removeParticle(p){
   p.visible = false;
 }
+//stop click
+function preventClick(event) {
+  event.stopPropagation();
+  event.preventDefault();
+}
+
+
 
 Hero.prototype.run = function(){
   this.status = "running";
@@ -835,6 +844,7 @@ Monster.prototype.sit = function(){
 }
 
 
+
 Carrot = function() {
   this.angle = 0;
   this.mesh = new THREE.Group();
@@ -874,6 +884,10 @@ Carrot = function() {
     }
   });
 }
+
+
+
+
 
 Hedgehog = function() {
   this.angle = 0;
@@ -1023,6 +1037,19 @@ function updateMonsterPosition(){
   monster.mesh.rotation.z = -Math.PI/2 + angle;
 }
 
+function updateFin(){
+  if(keyrev >=3){
+    
+    document.getElementById("winnerlap").style.display = "block";
+    document.getElementById("nowinnerlap").style.display = "none";
+    
+  }
+  else{
+    document.getElementById("nowinnerlap").style.display = "block";
+    document.getElementById("winnerlap").style.display = "none";
+  }
+}
+
 function gameOver(){
   fieldGameOver.className = "show";
   gameStatus = "gameOver";
@@ -1032,15 +1059,26 @@ function gameOver(){
   TweenMax.to(this, 1, {speed:0});
   TweenMax.to(camera.position, 3, {z:cameraPosGameOver, y: 60, x:-30});
   carrot.mesh.visible = false;
+  
   obstacle.mesh.visible = false;
   clearInterval(levelInterval);
+  
+  updateFin();
+  
+  
+  
+
+  // Ekrana tıklama olayını engelle
+  document.addEventListener("click", preventClick);
+  
+
 }
 
 function replay(){
   
   gameStatus = "preparingToReplay"
   
-  fieldGameOver.className = "";
+  
   
   TweenMax.killTweensOf(monster.pawFL.position);
   TweenMax.killTweensOf(monster.pawFR.position);
@@ -1076,7 +1114,7 @@ function replay(){
   TweenMax.to(monster.mouth.rotation, 2, {x:.2, ease:Power4.easeInOut});
   TweenMax.to(monster.mouth.rotation, 1, {x:.4, ease:Power4.easeIn, delay: 1, onComplete:function(){
     
-    resetGame();
+    
   }});
   
 }
@@ -1117,6 +1155,11 @@ function createCarrot(){
   scene.add(carrot.mesh);
 }
 
+
+
+
+
+
 function updateCarrotPosition(){
   carrot.mesh.rotation.y += delta * 6;
   carrot.mesh.rotation.z = Math.PI/2 - (floorRotation+carrot.angle);
@@ -1124,6 +1167,10 @@ function updateCarrotPosition(){
   carrot.mesh.position.x = Math.cos(floorRotation+carrot.angle) * (floorRadius+50);
   
 }
+
+
+
+
 
 function updateObstaclePosition(){
   if (obstacle.status=="flying")return;
@@ -1166,23 +1213,32 @@ function createBonusParticles(){
 
 function checkCollision(){
   var db = hero.mesh.position.clone().sub(carrot.mesh.position.clone());
+  
+  
   var dm = hero.mesh.position.clone().sub(obstacle.mesh.position.clone());
   
   if(db.length() < collisionBonus){
     getBonus();
   }
   
+  
+  
   if(dm.length() < collisionObstacle && obstacle.status != "flying"){
     getMalus();
   }
 }
 
+
+
+
 function getBonus(){
   bonusParticles.mesh.position.copy(carrot.mesh.position);
+  
   bonusParticles.mesh.visible = true;
   bonusParticles.explose();
-  carrot.angle += Math.PI/2;
+  
   //speed*=.95;
+  carrot.angle += Math.PI/2;
   monsterPosTarget += .025;
   
 }
@@ -1210,22 +1266,47 @@ function getMalus(){
   }})
 }
 
+
+
 function updateDistance(){
   distance += delta*speed;
   var d = distance/2;
   fieldDistance.innerHTML = Math.floor(d);
 }
 
+function updateKeyrev(){
+  if (level >= 3 && level < 5) {
+    
+  keyrev=1;
+  fieldKeyrev.innerHTML = "1";
+    
+    
+}if (level >= 5 && level < 7) {
+    
+  keyrev=2;
+  fieldKeyrev.innerHTML = "2";
+    
+    
+}if (level >= 7) {
+    
+  keyrev=3;
+  fieldKeyrev.innerHTML = "3";
+    
+    
+} 
+  
+  
+}
+
 function updateLevel(){
   if (speed >= maxSpeed) return;
   level++;
   speed += 2; 
-  if (level === 20) {
-    fieldkeyLevel.className = "show";
+  
     
-} else {
-    fieldkeyLevel.className = "hide";
-}
+    
+  }
+  
 
 }
 
@@ -1239,8 +1320,10 @@ function loop(){
       hero.run();
     }
     updateDistance();
+    updateKeyrev();
     updateMonsterPosition();
     updateCarrotPosition();
+    
     updateObstaclePosition();
     checkCollision();
   }
@@ -1263,6 +1346,7 @@ function init(event){
   createMonster();
   createFirs();
   createCarrot();
+  
   createBonusParticles();
   createObstacle();
   initUI();
@@ -1284,7 +1368,9 @@ function resetGame(){
   speed = initSpeed;
   level = 0;
   distance = 0;
+  keyrev=0;
   carrot.mesh.visible = true;
+  
   obstacle.mesh.visible = true;
   gameStatus = "play";
   hero.status = "running";
@@ -1292,12 +1378,33 @@ function resetGame(){
   audio.play();
   updateLevel();
   levelInterval = setInterval(updateLevel, levelUpdateFreq);
+  fieldGameOver.className = "";
+  
+  fieldKeyrev.innerHTML = "0";
+
+  
+  
+  // Diğer reset işlemleri burada yapılabilir
+
+  // Play düğmesini tekrar gizle
+  
+//document.getElementById("winner").style.display = "none";
+  
+    
+//document.getElementById("nowinner").style.display = "none";
+    
+  // Ekrana tıklama olayını tekrar aktif hale getir
+  document.removeEventListener("click", preventClick);
+
+
 }
 
 function initUI(){
   fieldDistance = document.getElementById("distValue");
+  fieldKeyrev = document.getElementById("keyValue");
   fieldGameOver = document.getElementById("gameoverInstructions");
-  fieldkeyLevel = document.getElementById("keyLevel");
+  
+  
   
 }
 
@@ -1380,3 +1487,4 @@ Trunc = function(){
   
   this.mesh.castShadow = true;
 }
+
